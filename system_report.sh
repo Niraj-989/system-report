@@ -19,10 +19,10 @@ CPU=$(grep -m1 "model name" /proc/cpuinfo | awk -F: '{print $2}')
 RAM=$(free -h | awk '/Mem:/ {print $2}')
 
 # DISK SIZE
-DISK=$(lsblk -d -o NAME,MODEL,SIZE)
+DISK=$(lsblk -d -o NAME,MODEL,SIZE | grep -v loop | grep -v sr0 | tail -n +2)
 
 # VIDEO INFO
-VIDEO=$(lshw -C display)
+VIDEO=$( sudo lshw -C display | grep product | awk -F: '{print $2}')
 
 # IP ADDRESS
 IP=$(hostname -I)
@@ -40,16 +40,16 @@ USER=$(who | awk '{print $1}' | uniq)
 Disk_Space=$(df -h --output=target,avail | tail -n +2 | paste -sd " | " -)
 
 # PROCESS COUNT
-PROCESS=$(ps)
+PROCESS=$(ps | wc -l)
 
 # LOAD
 LOAD=$(uptime | awk -F'load average:'  '{print $2}')
 
 # NETWORK CONNECTION
-NETWORK=$(ss -tunlp | grep LISTEN | awk '{print $5}' | cut -d: -f2 | paste -sd ","-)
+NETWORK=$(ss -tunlp | grep LISTEN | awk '{print $5}' | cut -d: -f2 | paste -sd "," -)
 
 #UFW STATUS
-UFW=$( sudo ufw status)
+UFW=$(sudo ufw status)
 
 # OUTPUT
 echo ""
@@ -63,9 +63,9 @@ echo "CPU: $CPU"
 echo "RAM: $RAM"
 echo "DISK: $DISK"
 echo "VIDEO: $VIDEO"
-echo "IP= $IP"
-echo "GATEWAY= $GATEWAY"
-echo "DNS= $DNS"
+echo "Host Address: $IP"
+echo "GATEWAY IP: $GATEWAY"
+echo "DNS Server: $DNS"
 echo ""
 echo ""
 echo "System Status"
