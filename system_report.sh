@@ -49,7 +49,7 @@ LOAD=$(uptime | awk -F'load average:'  '{print $2}')
 NETWORK=$(ss -tunlp | grep LISTEN | awk '{print $5}' | cut -d: -f2 | paste -sd "," -)
 
 #UFW STATUS
-UFW=$(sudo ufw status)
+UFW=$(sudo ufw status | awk '{print $2}')
 
 # OUTPUT
 echo ""
@@ -61,7 +61,7 @@ echo "OS: $OS"
 echo "Uptime: $UPTIME"
 echo "CPU: $CPU"
 echo "RAM: $RAM"
-echo "DISK: $DISK"
+echo "Disk(s): $DISK"
 echo "VIDEO: $VIDEO"
 echo "Host Address: $IP"
 echo "GATEWAY IP: $GATEWAY"
